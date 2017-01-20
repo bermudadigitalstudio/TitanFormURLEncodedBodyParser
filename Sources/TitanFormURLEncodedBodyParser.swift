@@ -5,6 +5,14 @@ public extension RequestType {
   public var formURLEncodedBody: [(key: String, value: String)] {
     return parse(body: self.body)
   }
+  public var postParams: [String : String] {
+    var ret = [String:String]()
+    let keys = parse(body: self.body)
+    for (k, v) in keys {
+      ret[k] = v
+    }
+    return ret
+  }
 }
 
 /*
