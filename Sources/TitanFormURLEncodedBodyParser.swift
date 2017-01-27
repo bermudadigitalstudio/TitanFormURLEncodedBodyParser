@@ -2,11 +2,11 @@ import Foundation
 import TitanCore
 
 public extension RequestType {
-  public var formURLEncodedBody: [(key: String, value: String)] {
+  public var formURLEncodedBody: [(name: String, value: String)] {
     return parse(body: self.body)
   }
   public var postParams: [String : String] {
-    var ret = [String:String]()
+    var ret = [String : String]()
     let keys = parse(body: self.body)
     for (k, v) in keys {
       ret[k] = v
@@ -17,12 +17,12 @@ public extension RequestType {
 
 /*
  Parse application/x-www-form-urlencoded bodies
- Returns as many key-value pairs as possible
+ Returns as many name-value pairs as possible
  Liberal in what it accepts, any failures to delimit pairs or decode percent
  encoding will result in empty strings
  */
-func parse(body: String) -> [(key: String, value: String)] {
-  var retValue = [(key: String, value: String)]()
+func parse(body: String) -> [(name: String, value: String)] {
+  var retValue = [(name: String, value: String)]()
 
   let pairs = body.components(separatedBy: "&") // Separate the tuples
 
