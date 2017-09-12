@@ -1,0 +1,12 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "TitanCore",
+      "reason": null,
+      "repositoryURL": "https://github.com/bermudadigitalstudio/TitanCore.git",
+      "version": "0.3.0"
+    }
+  ],
+  "version": 1
+}

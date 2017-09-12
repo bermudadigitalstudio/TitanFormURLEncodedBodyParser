@@ -2,17 +2,17 @@ import Foundation
 import TitanCore
 
 public extension RequestType {
-  public var formURLEncodedBody: [(name: String, value: String)] {
-    return parse(body: self.body)
-  }
-  public var postParams: [String : String] {
-    var ret = [String : String]()
-    let keys = parse(body: self.body)
-    for (k, v) in keys {
-      ret[k] = v
+    public var formURLEncodedBody: [(name: String, value: String)] {
+        return parse(body: self.body)
     }
-    return ret
-  }
+    public var postParams: [String : String] {
+        var ret = [String: String]()
+        let keys = parse(body: self.body)
+        for (k, v) in keys {
+            ret[k] = v
+        }
+        return ret
+    }
 }
 
 /*
@@ -22,21 +22,28 @@ public extension RequestType {
  encoding will result in empty strings
  */
 func parse(body: String) -> [(name: String, value: String)] {
-  var retValue = [(name: String, value: String)]()
+    var retValue = [(name: String, value: String)]()
 
-  let pairs = body.components(separatedBy: "&") // Separate the tuples
+    let pairs = body.components(separatedBy: "&") // Separate the tuples
 
-  for element in pairs {
-    let pair = element.components(separatedBy: "=")
-      .map { $0.replacingOccurrences(of: "+", with: " ") } // Plus becomes a space, no %20 here
-      .map { $0.removingPercentEncoding ?? "" } // Remove percent encoding, failure to remove percent encoding is replaced with empty string
-    if pair.count == 2 {
-      retValue.append((pair[0], pair[1]))
-    } else if pair.count == 1 { // support ?key=&key2=string
-      retValue.append((pair[0], ""))
-    } else {
-      break
+    for element in pairs {
+        guard let range = element.range(of: "=") else {
+            return retValue
+        }
+
+        let rawKey = element.substring(to: range.lowerBound)
+        let rawValue = element.substring(from: range.upperBound)
+
+        // Remove + character
+        let sanitizedKey = rawKey.replacingOccurrences(of: "+", with: " ")
+        let sanitizedPlus = rawValue.replacingOccurrences(of: "+", with: " ")
+
+        // Remove percent encoding characters
+        if let sanitizedValue = sanitizedPlus.removingPercentEncoding {
+            retValue.append((sanitizedKey, sanitizedValue))
+        } else {
+            retValue.append((sanitizedKey, sanitizedPlus))
+        }
     }
-  }
-  return retValue
+    return retValue
 }

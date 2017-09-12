@@ -2,5 +2,5 @@ import XCTest
 @testable import TitanFormURLEncodedBodyParserTests
 
 XCTMain([
-     testCase(TitanFormURLEncodedBodyParserTests.allTests),
+     testCase(TitanFormURLEncodedBodyParserTests.allTests)
 ])
